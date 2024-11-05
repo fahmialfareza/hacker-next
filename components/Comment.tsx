@@ -1,4 +1,17 @@
-const Comment = ({ comment }) => (
+import { FC } from "react";
+
+interface CommentData {
+  id: number;
+  user: string;
+  content: string;
+  comments?: CommentData[];
+}
+
+interface CommentProps {
+  comment: CommentData;
+}
+
+const Comment: FC<CommentProps> = ({ comment }) => (
   <div className="comment">
     <div className="comment-user">{comment.user}</div>
     <div

@@ -1,6 +1,19 @@
 import Link from "next/link";
+import { FC } from "react";
 
-const StoryList = ({ stories }) => {
+interface Story {
+  id: number;
+  title: string;
+  url: string;
+  points?: number;
+  comments_count?: number;
+}
+
+interface StoryListProps {
+  stories: Story[];
+}
+
+const StoryList: FC<StoryListProps> = ({ stories }) => {
   return (
     <div className="story-list">
       {stories.map((story) => (

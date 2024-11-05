@@ -2,8 +2,31 @@ import Error from "next/error";
 import axios from "axios";
 import Layout from "../components/Layout";
 import CommentList from "../components/CommentList";
+import { NextPage, NextPageContext } from "next";
 
-const Story = ({ story }) => {
+interface Comment {
+  id: number;
+  user: string;
+  content: string;
+  time_ago: string;
+  comments: Comment[];
+}
+
+interface StoryData {
+  id: number;
+  title: string;
+  url: string;
+  points?: number;
+  comments_count?: number;
+  time_ago: string;
+  comments: Comment[];
+}
+
+interface StoryProps {
+  story: StoryData | null;
+}
+
+const Story: NextPage<StoryProps> = ({ story }) => {
   if (!story) {
     return <Error statusCode={503} />;
   }
@@ -62,18 +85,21 @@ const Story = ({ story }) => {
   );
 };
 
-Story.getInitialProps = async ({ req, res, query }) => {
-  let story;
+// Modify `getInitialProps` to accept NextPageContext and handle query parsing
+Story.getInitialProps = async ({ query }: NextPageContext) => {
+  const storyId = query.id as string | undefined; // Cast to string | undefined
+  let story: StoryData | null = null;
 
-  try {
-    const storyId = query.id;
-    const response = await axios.get(
-      `https://node-hnapi.herokuapp.com/item/${storyId}`
-    );
-    story = response.data;
-  } catch (e) {
-    console.log(err);
-    story = null;
+  if (storyId) {
+    try {
+      const response = await axios.get(
+        `https://node-hnapi.herokuapp.com/item/${storyId}`
+      );
+      story = response.data;
+    } catch (err) {
+      console.log(err);
+      story = null;
+    }
   }
 
   return { story };

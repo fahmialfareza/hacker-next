@@ -5,13 +5,26 @@ import axios from "axios";
 import StoryList from "../components/StoryList";
 import Layout from "../components/Layout";
 
-class Index extends React.Component {
-  static async getInitialProps({ req, res, query }) {
-    let stories;
-    let page;
+interface Story {
+  id: number;
+  title: string;
+  url: string;
+  points?: number;
+  comments_count?: number;
+}
+
+interface IndexProps {
+  stories: Story[];
+  page: number;
+}
+
+class Index extends React.Component<IndexProps> {
+  static async getInitialProps({ query }: { query: { page?: string } }) {
+    let stories: Story[] = [];
+    // Parse the page number and default to 1 if not provided
+    const page = Number(query.page) || 1;
 
     try {
-      page = Number(query.page) || 1;
       const response = await axios.get(
         `https://node-hnapi.herokuapp.com/news?page=${page}`
       );

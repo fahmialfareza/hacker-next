@@ -1,8 +1,21 @@
 import Link from "next/link";
 import Head from "next/head";
 import Router from "next/router";
+import { FC, ReactNode } from "react";
 
-const Layout = ({ children, title, description, backButton }) => {
+interface LayoutProps {
+  children: ReactNode;
+  title: string;
+  description?: string;
+  backButton?: boolean;
+}
+
+const Layout: FC<LayoutProps> = ({
+  children,
+  title,
+  description,
+  backButton,
+}) => {
   return (
     <div>
       <Head>
